@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>Simple Map</title>
+  <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+  <meta charset="utf-8">
+  <script type="text/javascript"
+    src="https://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyDpitgsY7hUrh_2HHAD20x_cnXRxvI_5Cw"></script>
+
+  <script>
+    var map;
+    var infowindow;
+
+    function initialize() {
+      var center = new google.maps.LatLng(10.2976877, 9.7869294);
+      map = new google.maps.Map(document.getElementById('map'), {
+        center: center,
+        zoom: 15
+      });
+
+      var request = {
+        location: center,
+        radius: 10047,
+        types: ['atm']
+      };
+      infowindow = new google.maps.InfoWindow();
+
+      var service = new google.maps.places.PlacesService(map);
+
+      service.nearbySearch(request, callback);
+    }
+
+    function callback(results, status) {
+      if (status == google.maps.places.PlacesServiceStatus.OK) {
+        for (var i = 0; i < results.length; i++) {
+          createMarker(results[i]);
+        }
+      }
+    }
+    function createMarker(place) {
+      var placeLoc = place.geometry.location;
+      var marker = new google.maps.Marker({
+        map: map,
+        position: place.geometry.location
+      });
+
+      google.maps.event.addListener(marker, 'click', function () {
+        infowindow.setContent(place.name);
+        infowindow.open(map, this);
+      })
+
+    }
+
+    function successGet(position) {
+      window.alert("get Loc")
+      const Lat = position.coords.latitude;
+      const lon = position.coords.longitude;
+      window.alert(Lat+" "+lon);
+      function createIcon(place) {
+        var placeLoc = place.geometry.location;
+        var marker = new google.maps.Marker({
+          map: map,
+          position: place.geometry.location
+        });
+
+     
+    }
+
+    function failGet() {
+      window.alert("error")
+    }
+
+    var loc = navigator.geolocation.getCurrentPosition(successGet);
+
+
+    google.maps.event.addDomListener(window, 'load', initialize);
+
+  </script>
+
+  <style>
+    #map {
+      height: 100%;
+    }
+
+    html,
+    body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="map"></div>
+</body>
+
+</html>
